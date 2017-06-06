@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  couchdb1:
+    image: healthcatalyst/fabric.docker.couchdb
+    environment:
+      - NODENAME=couchdb1
+      - COUCHDB_USER
+      - COUCHDB_PASSWORD
+    ports:
+      - "15984:5984"
+    networks:
+      - webnet
+
+  setup:
+    image: healthcatalyst/fabric.docker.couchdb
+    environment:
+      - COUCHDB_USER
+      - COUCHDB_PASSWORD
+    command: bash -c "/opt/couchdb/wait-for-it.sh couchdb1:5984 -t 300 -- ./configure-cluster.sh"
+    depends_on:
+      - couchdb1
+    networks:
+      - webnet
+
+  couchdb2:
+    image: healthcatalyst/fabric.docker.couchdb
+    environment:
+      - NODENAME=couchdb2
+      - COUCHDB_USER
+      - COUCHDB_PASSWORD
+    ports:
+      - "25984:5984"
+    networks:
+      - webnet
+
+  couchdb3:
+    image: healthcatalyst/fabric.docker.couchdb
+    environment:
+      - NODENAME=couchdb3
+      - COUCHDB_USER
+      - COUCHDB_PASSWORD
+    ports:
+      - "35984:5984"
+    networks:
+      - webnet
+networks:
+  webnet:
