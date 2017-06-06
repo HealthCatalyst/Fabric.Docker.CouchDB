@@ -1,7 +1,7 @@
 FROM klaemo/couchdb:2.0.0
 
 COPY vm.args /opt/couchdb/etc
-#COPY local.ini /opt/couchdb/etc/local.d/
+COPY local.ini /opt/couchdb/etc/local.d/
 
 COPY ./docker-entrypoint.sh /
 COPY ./configure-cluster.sh /opt/couchdb/configure-cluster.sh
