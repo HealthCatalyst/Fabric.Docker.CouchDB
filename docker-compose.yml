@@ -44,5 +44,13 @@ services:
       - "35984:5984"
     networks:
       - webnet
+
+  haproxy:
+    image: healthcatalyst/fabric.docker.haproxy
+    ports:
+      - "5984:5984"
+    networks:
+      - webnet
+
 networks:
   webnet:
