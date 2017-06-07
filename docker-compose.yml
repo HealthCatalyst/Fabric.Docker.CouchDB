@@ -3,6 +3,8 @@ version: '3'
 services:
   couchdb1:
     image: healthcatalyst/fabric.docker.couchdb
+    volumes:
+      - db1-data:/opt/couchdb/data
     environment:
       - NODENAME=couchdb1
       - COUCHDB_USER
@@ -25,6 +27,8 @@ services:
 
   couchdb2:
     image: healthcatalyst/fabric.docker.couchdb
+    volumes:
+      - db2-data:/opt/couchdb/data
     environment:
       - NODENAME=couchdb2
       - COUCHDB_USER
@@ -36,6 +40,8 @@ services:
 
   couchdb3:
     image: healthcatalyst/fabric.docker.couchdb
+    volumes:
+      - db3-data:/opt/couchdb/data
     environment:
       - NODENAME=couchdb3
       - COUCHDB_USER
@@ -54,3 +60,8 @@ services:
 
 networks:
   webnet:
+
+volumes:
+  db1-data:
+  db2-data:
+  db3-data:
