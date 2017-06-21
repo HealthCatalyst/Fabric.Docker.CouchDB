@@ -23,12 +23,21 @@ if [ "$1" = '/opt/couchdb/bin/couchdb' ]; then
 	chmod 664 /opt/couchdb/etc/local.d/*.ini
 	chmod 775 /opt/couchdb/etc/*.d
 
+	if [ -e "/run/secrets/$USERNAME_SECRET" ] && [ -e "/run/secrets/$PASSWORD_SECRET" ]; then
+		username=$(cat /run/secrets/$USERNAME_SECRET)
+		password=$(cat /run/secrets/$PASSWORD_SECRET)
+	fi
+
 	if [ ! -z "$NODENAME" ] && ! grep "couchdb@" /opt/couchdb/etc/vm.args; then
 		echo "-sname couchdb@$NODENAME" >> /opt/couchdb/etc/vm.args
 		echo "-name couchdb@$NODENAME" >> /opt/couchdb/etc/vm.args
 	fi
 
-	if [ "$COUCHDB_USER" ] && [ "$COUCHDB_PASSWORD" ]; then
+	if [ "$username" ] && [ "$password" ]; then
+		# Create admin from secrets
+		printf "[admins]\n%s = %s\n" "$username" "$password" > /opt/couchdb/etc/local.d/docker.ini
+		chown couchdb:couchdb /opt/couchdb/etc/local.d/docker.ini
+	elif [ "$COUCHDB_USER" ] && [ "$COUCHDB_PASSWORD" ]; then
 		# Create admin
 		printf "[admins]\n%s = %s\n" "$COUCHDB_USER" "$COUCHDB_PASSWORD" > /opt/couchdb/etc/local.d/docker.ini
 		chown couchdb:couchdb /opt/couchdb/etc/local.d/docker.ini
